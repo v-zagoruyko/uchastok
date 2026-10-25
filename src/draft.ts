@@ -1,6 +1,6 @@
 import type { PlotData } from './types';
 
-const KEY = 'plot-planner:draft';
+const KEY = 'uchastok:draft';
 
 interface Draft {
   plot: PlotData;

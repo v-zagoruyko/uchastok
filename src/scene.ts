@@ -177,7 +177,7 @@ export interface World {
   applySun(sun: SunState): void;
 }
 
-const CAMERA_KEY = 'plot-planner:camera';
+const CAMERA_KEY = 'uchastok:camera';
 
 function configureSky(sky: Sky) {
   const u = sky.material.uniforms;

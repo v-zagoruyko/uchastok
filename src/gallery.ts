@@ -38,7 +38,7 @@ const plot: PlotData = {
   objects,
 };
 
-const world = createWorld(plot, 'plot-planner:gallery-camera');
+const world = createWorld(plot, 'uchastok:gallery-camera');
 const { root } = buildObjects(plot.objects);
 world.scene.add(root);
 world.grass.rebuild(plot.objects);
