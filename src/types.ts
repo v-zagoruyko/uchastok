@@ -55,7 +55,7 @@ export interface BoxObj extends Base {
   height: number;
   color: string;
   /** Покрытие вместо плоского цвета: грунтовка, плитка, бетон. */
-  surface?: 'dirt' | 'tiles' | 'concrete';
+  surface?: 'dirt' | 'tiles' | 'concrete' | 'paving';
 }
 
 /** Ворота в заборе (src/gate.ts): вырезают проём там, где стоят на границе; +z наружу. */
@@ -85,7 +85,30 @@ export interface DesignObj extends Base {
   height: number;
 }
 
-export type PlotObject = TreeObj | BuildingObj | GreenhouseObj | TireObj | BoxObj | DesignObj | CarObj | GateObj;
+/** Пергола с кострищем и креслами (src/garden.ts); вход со стороны +z. */
+export interface PergolaObj extends Base {
+  type: 'pergola';
+  width: number;
+  depth: number;
+  height: number;
+}
+
+/** Приподнятая грядка (src/garden.ts); height это высота обвязки. */
+export interface BedObj extends Base {
+  type: 'bed';
+  width: number;
+  depth: number;
+  height: number;
+}
+
+/** Готовая модель Poly Haven из public/assets/models/<model>/ (src/models.ts), в метрах. */
+export interface ModelObj extends Base {
+  type: 'model';
+  model: string;
+  scale?: number;
+}
+
+export type PlotObject = TreeObj | BuildingObj | GreenhouseObj | TireObj | BoxObj | DesignObj | CarObj | GateObj | PergolaObj | BedObj | ModelObj;
 
 /** Участок соседа: заливка и забор, без построек (они лежат в objects). */
 export interface Parcel {

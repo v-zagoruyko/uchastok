@@ -7,6 +7,8 @@ export function footprintArea(o: PlotObject): number | null {
     case 'building':
     case 'house':
     case 'bath':
+    case 'pergola':
+    case 'bed':
     case 'box': return o.width * o.depth;
     case 'greenhouse': return o.width * o.length;
     default: return null;

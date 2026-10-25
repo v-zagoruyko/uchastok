@@ -12,6 +12,11 @@ const TILE = {
   brushed_concrete: 2.5,
   brick_wall_001: 3,
   checkered_pavement_tiles: 2,
+  box_profile_metal_sheet: 2,
+  japanese_cedar_planks: 1.13,
+  weathered_plank_siding: 1.57,
+  wood_floor_deck: 1.8,
+  large_grey_tiles: 3,
 } as const;
 
 export type TextureId = keyof typeof TILE;

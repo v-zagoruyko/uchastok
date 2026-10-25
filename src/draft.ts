@@ -36,7 +36,7 @@ export function clearDraft() {
   } catch { /* нечего чистить */ }
 }
 
-const TYPES = ['tree', 'building', 'greenhouse', 'tire', 'box', 'house', 'bath', 'car', 'gate'];
+const TYPES = ['tree', 'building', 'greenhouse', 'tire', 'box', 'house', 'bath', 'car', 'gate', 'pergola', 'bed', 'model'];
 const finite = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v);
 const isPoint = (p: unknown) => Array.isArray(p) && p.length === 2 && p.every(finite);
 

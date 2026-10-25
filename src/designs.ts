@@ -29,14 +29,14 @@ function gableHouse({ w, d, h }: Dims): THREE.Group {
   const plinth = 0.35;
   const rise = Math.min((d / 2) * Math.tan(rad(32)), h * 0.42);
   const wallH = Math.max(1.8, h - rise - plinth);
-  const wallMat = pbr('brown_planks_03', { color: '#b79b72' });
-  const roofMat = pbr('corrugated_iron', { color: '#4f5a63', metalness: 0.3 });
+  const wallMat = pbr('weathered_plank_siding', { color: '#ffffff' });
+  const roofMat = pbr('box_profile_metal_sheet', { color: '#c4cacf', metalness: 0.1 });
   g.add(slab(w + 0.1, plinth, d + 0.1, concrete('#bdbdb6'), 'brushed_concrete'));
 
   const body = new THREE.Group();
   body.position.y = plinth;
-  body.add(slab(w, wallH, d, wallMat, 'brown_planks_03', true));
-  body.add(gabledTop({ span: d, length: w, wallH, rise, overhang: 0.35 }, wallMat, 'brown_planks_03', roofMat, 'corrugated_iron', true));
+  body.add(slab(w, wallH, d, wallMat, 'weathered_plank_siding', true));
+  body.add(gabledTop({ span: d, length: w, wallH, rise, overhang: 0.35 }, wallMat, 'weathered_plank_siding', roofMat, 'box_profile_metal_sheet', true));
 
   const slots = Math.max(2, Math.round(w / 2.2));
   const doorSlot = slots > 2 ? 1 : 0;
@@ -69,7 +69,7 @@ function gableHouse({ w, d, h }: Dims): THREE.Group {
   const porch = deck(2.6, porchD, '#a58a66');
   porch.position.set(doorX, 0, d / 2 + porchD / 2);
   const postH = Math.min(2.4, wallH * 0.85);
-  const canopy = sheet(3, porchD + 0.3, 'corrugated_iron', roofMat, 0.08);
+  const canopy = sheet(3, porchD + 0.3, 'box_profile_metal_sheet', roofMat, 0.08);
   canopy.position.set(doorX, postH + 0.05, d / 2 + porchD / 2 + 0.1);
   body.add(porch, canopy);
   for (const s of [-1, 1]) {
@@ -93,10 +93,10 @@ function aFrame({ w, d, h }: Dims, kind: DesignKind): THREE.Group {
   const half = w / 2;
   const bath = kind === 'bath';
   const wood = pbr('brown_planks_03', { color: bath ? '#6b4d36' : '#8a6a4a' });
-  const roofId: TextureId = bath ? 'brown_planks_03' : 'corrugated_iron';
+  const roofId: TextureId = bath ? 'brown_planks_03' : 'box_profile_metal_sheet';
   const roofMat = bath
     ? pbr('brown_planks_03', { color: '#5a4230' })
-    : pbr('corrugated_iron', { color: '#3f464d', metalness: 0.3 });
+    : pbr('box_profile_metal_sheet', { color: '#3f464d', metalness: 0.3 });
   g.add(slab(w - 0.1, plinth, d - 0.1, concrete('#a9a9a2'), 'brushed_concrete'));
 
   const len = Math.hypot(half, rise);
@@ -157,13 +157,13 @@ function barnHouse({ w, d, h }: Dims): THREE.Group {
   const rise = Math.min((w / 2) * Math.tan(rad(48)), h * 0.52);
   const wallH = Math.max(1.8, h - rise - plinth);
   const wallMat = pbr('brown_planks_03', { color: '#3a3430' });
-  const roofMat = pbr('corrugated_iron', { color: '#2c3036', metalness: 0.35 });
+  const roofMat = pbr('box_profile_metal_sheet', { color: '#2c3036', metalness: 0.35 });
   g.add(slab(w + 0.1, plinth, d + 0.1, concrete('#8d8d87'), 'brushed_concrete'));
 
   const body = new THREE.Group();
   body.position.y = plinth;
   body.add(slab(w, wallH, d, wallMat, 'brown_planks_03'));
-  body.add(gabledTop({ span: w, length: d, wallH, rise, overhang: 0.15 }, wallMat, 'brown_planks_03', roofMat, 'corrugated_iron', false));
+  body.add(gabledTop({ span: w, length: d, wallH, rise, overhang: 0.15 }, wallMat, 'brown_planks_03', roofMat, 'box_profile_metal_sheet', false));
 
   const gw = w * 0.5;
   const gh = wallH + rise * 0.35 - 0.4;
@@ -218,8 +218,8 @@ function modernShed({ w, d, h }: Dims, kind: DesignKind): THREE.Group {
   body.add(mesh(wallGeo, wallMat));
 
   const slope = Math.atan2(hHigh - hLow, d);
-  const roofMat = pbr('corrugated_iron', { color: '#2b2f33', metalness: 0.4 });
-  const roof = sheet(w + 0.5, Math.hypot(d, hHigh - hLow) + 0.9, 'corrugated_iron', roofMat, 0.12, false);
+  const roofMat = pbr('box_profile_metal_sheet', { color: '#2b2f33', metalness: 0.4 });
+  const roof = sheet(w + 0.5, Math.hypot(d, hHigh - hLow) + 0.9, 'box_profile_metal_sheet', roofMat, 0.12, false);
   roof.position.set(0, (hHigh + hLow) / 2 + 0.06, 0.15);
   roof.rotation.x = -slope;
   body.add(roof);
@@ -262,14 +262,14 @@ function classicBath({ w, d, h }: Dims): THREE.Group {
   const rise = Math.min((w / 2) * Math.tan(rad(30)), h * 0.4);
   const wallH = Math.max(1.8, h - rise - plinth);
   const porch = Math.min(1.6, d * 0.35);
-  const wallMat = pbr('brown_planks_03', { color: '#8a6a4a' });
-  const roofMat = pbr('corrugated_iron', { color: '#5a463a', metalness: 0.25 });
+  const wallMat = pbr('japanese_cedar_planks', { color: '#b89572' });
+  const roofMat = pbr('box_profile_metal_sheet', { color: '#a9afb4', metalness: 0.1 });
   g.add(slab(w + 0.1, plinth, d + 0.1, concrete('#a9a9a2'), 'brushed_concrete'));
 
   const body = new THREE.Group();
   body.position.y = plinth;
-  body.add(slab(w, wallH, d, wallMat, 'brown_planks_03', true));
-  body.add(gabledTop({ span: w, length: d, wallH, rise, overhang: 0.3, frontExtra: porch }, wallMat, 'brown_planks_03', roofMat, 'corrugated_iron', false));
+  body.add(slab(w, wallH, d, wallMat, 'japanese_cedar_planks', true));
+  body.add(gabledTop({ span: w, length: d, wallH, rise, overhang: 0.3, frontExtra: porch }, wallMat, 'japanese_cedar_planks', roofMat, 'box_profile_metal_sheet', false));
 
   const dr = door(0.85, Math.min(1.9, wallH * 0.85), '#5b4129');
   dr.position.set(-w * 0.2, 0, d / 2);

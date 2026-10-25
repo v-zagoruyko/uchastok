@@ -17,6 +17,8 @@ const DIMS: Partial<Record<PlotObject['type'], { w: string; d?: string; h: strin
   building: { w: 'width', d: 'depth', h: 'wallHeight' },
   greenhouse: { w: 'width', d: 'length', h: 'height' },
   box: { w: 'width', d: 'depth', h: 'height' },
+  pergola: { w: 'width', d: 'depth', h: 'height' },
+  bed: { w: 'width', d: 'depth', h: 'height' },
 };
 
 export function setupEditor(world: World, plot: PlotData, byId: Map<string, THREE.Object3D>, restored: boolean) {

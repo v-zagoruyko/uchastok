@@ -142,9 +142,9 @@ export function steelPipe(h: number) {
 /** Настил веранды или террасы: верх на нуле. */
 export function deck(w: number, d: number, color: string) {
   const geo = new THREE.BoxGeometry(w, 0.14, d);
-  scaleBoxUV(geo, w, 0.14, d, 'brown_planks_03');
+  scaleBoxUV(geo, w, 0.14, d, 'wood_floor_deck');
   swapUV(geo);
-  const m = mesh(geo, pbr('brown_planks_03', { color }));
+  const m = mesh(geo, pbr('wood_floor_deck', { color }));
   m.position.y = -0.07;
   return m;
 }

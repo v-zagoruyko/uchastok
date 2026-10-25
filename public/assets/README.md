@@ -14,5 +14,23 @@
 | `brushed_concrete` | https://polyhaven.com/a/brushed_concrete | Dario Barresi, Dimitrios Savva | 2.5 | бетонный ящик |
 | `brick_wall_001` | https://polyhaven.com/a/brick_wall_001 | Rob Tuytel, Dimitrios Savva | 3.0 | трубы |
 | `checkered_pavement_tiles` | https://polyhaven.com/a/checkered_pavement_tiles | Amal Kumar | 2.0 | плитка у теплицы |
+| `box_profile_metal_sheet` | https://polyhaven.com/a/box_profile_metal_sheet | Amal Kumar | 2.0 | кровля домов и бани; `diff.jpg` обесцвечен и подсвечен (оригинал красный), `nor`/`rough` без изменений |
+| `weathered_plank_siding` | https://polyhaven.com/a/weathered_plank_siding | Dimitrios Savva | 1.57 | стены двускатного дома |
+| `japanese_cedar_planks` | https://polyhaven.com/a/japanese_cedar_planks | Charlotte Baglioni, Rico Cilliers | 1.13 | стены классической бани |
+| `wood_floor_deck` | https://polyhaven.com/a/wood_floor_deck | Dimitrios Savva | 1.8 | настилы веранд (`deck()` в `src/parts.ts`) |
+| `large_grey_tiles` | https://polyhaven.com/a/large_grey_tiles | Rob Tuytel | 3.0 | плиточный двор (`surface: "paving"`) |
 
 Деревья Poly Haven (`pine_tree_01`, `fir_tree_01`) слишком тяжёлые для браузера (сотни МБ), деревья строятся кодом (`src/objects.ts`).
+
+## Модели
+
+Готовые модели Poly Haven (CC0), glTF 1K, в метрах, лежат в `models/<id>/`; грузятся в `src/models.ts` (тип `model` в `data/plot.json`, у пергол кострище подгружается само). md5 проверены по `api.polyhaven.com/files/<id>`.
+
+| Модель | Автор | Где используется |
+|---|---|---|
+| `stone_fire_pit` https://polyhaven.com/a/stone_fire_pit | Sebastian Platen | кострище в перголе |
+| `planter_box_01`, `_02`, `_03` https://polyhaven.com/a/planter_box_01 | James Ray Cock | кашпо у дома |
+| `outdoor_table_chair_set_01` https://polyhaven.com/a/outdoor_table_chair_set_01 | James Ray Cock | стол со стульями на дворе |
+| `painted_wooden_bench` https://polyhaven.com/a/painted_wooden_bench | Kirill Sannikov | скамейка на дворе |
+
+Кусты `shrub_*` не подошли: это наборы отдельных листьев для художников, а не готовые кусты.

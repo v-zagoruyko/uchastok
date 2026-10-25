@@ -2,7 +2,9 @@ import * as THREE from 'three';
 import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { buildCar } from './car';
 import { buildDesign } from './designs';
+import { buildBed, buildPergola } from './garden';
 import { buildGate } from './gate';
+import { buildModel } from './models';
 import { flat, mesh, seeded, tint } from './parts';
 import { cylinderUV, pbr, planarUV, scaleBoxUV, swapUV, type TextureId } from './textures';
 import type { BoxObj, BuildingObj, GreenhouseObj, PlotObject, TireObj, TreeObj } from './types';
@@ -258,6 +260,7 @@ const SURFACES = {
   dirt: { id: 'brown_mud_dry', color: '#d4c7b2' },
   tiles: { id: 'checkered_pavement_tiles', color: '#ffffff' },
   concrete: { id: 'brushed_concrete', color: '#ffffff' },
+  paving: { id: 'large_grey_tiles', color: '#ffffff' },
 } as const;
 
 function box(o: BoxObj): THREE.Object3D {
@@ -280,6 +283,9 @@ function create(o: PlotObject): THREE.Object3D {
     case 'bath': return buildDesign(o);
     case 'car': return buildCar(o);
     case 'gate': return buildGate(o);
+    case 'pergola': return buildPergola(o);
+    case 'bed': return buildBed(o);
+    case 'model': return buildModel(o);
   }
 }
 

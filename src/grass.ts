@@ -37,7 +37,7 @@ function footprint(o: PlotObject) {
   let w = 0;
   let d = 0;
   let front = 0;
-  if (o.type === 'building' || o.type === 'box') [w, d] = [o.width, o.depth];
+  if (o.type === 'building' || o.type === 'box' || o.type === 'pergola' || o.type === 'bed') [w, d] = [o.width, o.depth];
   else if (o.type === 'greenhouse') [w, d] = [o.width, o.length];
   else if (o.type === 'tire') [w, d] = [o.diameter, o.diameter];
   else if (o.type === 'car') [w, d] = [4.7, 2];
