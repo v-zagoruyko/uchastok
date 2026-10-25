@@ -1,0 +1,23 @@
+services:
+  web:
+    image: ${IMAGE}
+    restart: unless-stopped
+    mem_limit: 32m
+    networks: [proxy]
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.uchastok.rule=Host(`uchastok.zagoruykov.site`)
+      - traefik.http.routers.uchastok.entrypoints=websecure
+      - traefik.http.routers.uchastok.tls.certresolver=le
+      - traefik.http.services.uchastok.loadbalancer.server.port=80
+      - traefik.http.routers.uchastok-www.rule=Host(`www.uchastok.zagoruykov.site`)
+      - traefik.http.routers.uchastok-www.entrypoints=websecure
+      - traefik.http.routers.uchastok-www.tls.certresolver=le
+      - traefik.http.routers.uchastok-www.middlewares=uchastok-www-redirect
+      - traefik.http.middlewares.uchastok-www-redirect.redirectregex.regex=^https://www\.(.*)
+      - traefik.http.middlewares.uchastok-www-redirect.redirectregex.replacement=https://$${1}
+      - traefik.http.middlewares.uchastok-www-redirect.redirectregex.permanent=true
+
+networks:
+  proxy:
+    external: true
