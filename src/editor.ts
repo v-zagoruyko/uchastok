@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { STYLES } from './designs';
-import { storeDraft } from './draft';
+import { clearDraft, parsePlot, storeDraft } from './draft';
+import { areaLabel, disposeLabel, footprintArea, formatArea } from './labels';
 import { createObject } from './objects';
 import type { World } from './scene';
 import type { PlotData, PlotObject } from './types';
@@ -21,6 +22,8 @@ const DIMS: Partial<Record<PlotObject['type'], { w: string; d?: string; h: strin
 export function setupEditor(world: World, plot: PlotData, byId: Map<string, THREE.Object3D>, restored: boolean) {
   const entries = new Map(plot.objects.map((o) => [o.id, o]));
   const movable = plot.objects.filter((o) => !o.fixed);
+  // В списке и с подписями только наши объекты; чужие можно взять мышью, но в списке их нет
+  const listed = movable.filter((o) => !o.neighbor);
   const canvas = world.renderer.domElement;
   const $ = <T extends HTMLElement>(sel: string) => document.querySelector<T>(sel)!;
   const list = $('#list');
@@ -34,6 +37,9 @@ export function setupEditor(world: World, plot: PlotData, byId: Map<string, THRE
   const resetDims = $<HTMLButtonElement>('#reset-dims');
   const openRow = $('#open-row');
   const openInput = $<HTMLInputElement>('#f-open');
+  const areasToggle = $<HTMLInputElement>('#areas');
+  const labels = new Map<string, THREE.Sprite>();
+  const areaTexts = new Map<string, HTMLElement>();
   let styleKind: string | null = null;
 
   let selected: string | null = null;
@@ -112,7 +118,23 @@ export function setupEditor(world: World, plot: PlotData, byId: Map<string, THRE
       for (const mat of ([] as THREE.Material[]).concat(m.material ?? [])) mat.dispose();
     });
     byId.set(id, next);
+    updateArea(id);
     if (selected === id) tint(id, true);
+  }
+
+  // Площадь основания: в списке и подписью над объектом (пересоздаётся вместе с моделью)
+  function updateArea(id: string) {
+    const text = areaTexts.get(id);
+    const area = footprintArea(entries.get(id)!);
+    if (!text || area === null) return;
+    text.textContent = formatArea(area);
+    const obj = byId.get(id)!;
+    const old = labels.get(id);
+    if (old) disposeLabel(old);
+    const label = areaLabel(formatArea(area), new THREE.Box3().setFromObject(obj).max.y + 0.4);
+    label.visible = areasToggle.checked;
+    obj.add(label);
+    labels.set(id, label);
   }
 
   function select(id: string | null) {
@@ -127,13 +149,13 @@ export function setupEditor(world: World, plot: PlotData, byId: Map<string, THRE
   let version = 0;
   function save() {
     const mine = ++version;
-    storeDraft(plot, false);
+    const stored = storeDraft(plot, false);
     world.grass.rebuild(plot.objects);
     world.setGates(plot.objects);
     if (import.meta.env.PROD) {
-      // Файл plot.json пишет только dev-сервер; на проде правки до перезагрузки, скачать их можно кнопкой ⬇
-      status.textContent = 'просмотр: не сохраняется';
-      status.className = '';
+      // Файл plot.json пишет только dev-сервер; на проде расстановка живёт в браузере, скачать её можно кнопкой ⬇
+      status.textContent = stored ? 'в браузере' : 'браузер не сохраняет';
+      status.className = stored ? 'ok' : 'err';
       return;
     }
     status.textContent = '…';
@@ -162,6 +184,36 @@ export function setupEditor(world: World, plot: PlotData, byId: Map<string, THRE
     URL.revokeObjectURL(url);
   });
 
+  // Загрузка своего JSON: кладём в копию браузера и перезагружаем страницу, мир строится из plot целиком
+  const uploadFile = $<HTMLInputElement>('#upload-file');
+  $('#upload').addEventListener('click', () => uploadFile.click());
+  uploadFile.addEventListener('change', async () => {
+    const file = uploadFile.files?.[0];
+    uploadFile.value = '';
+    if (!file) return;
+    try {
+      const next = parsePlot(await file.text());
+      if (!storeDraft(next, false)) throw new Error('браузер не дал сохранить');
+      location.reload();
+    } catch (err) {
+      status.textContent = `не загружено: ${(err as Error).message}`;
+      status.className = 'err';
+    }
+  });
+
+  // На проде копия в браузере перекрывает данные сайта: сброс возвращает исходные
+  const reset = $<HTMLButtonElement>('#reset');
+  reset.hidden = !import.meta.env.PROD;
+  reset.addEventListener('click', () => {
+    if (!confirm('Сбросить расстановку к исходной? Правки в браузере пропадут.')) return;
+    clearDraft();
+    location.reload();
+  });
+
+  areasToggle.addEventListener('change', () => {
+    for (const label of labels.values()) label.visible = areasToggle.checked;
+  });
+
   function place(id: string, x: number, z: number) {
     const o = entries.get(id)!;
     o.x = round1(x);
@@ -185,7 +237,7 @@ export function setupEditor(world: World, plot: PlotData, byId: Map<string, THRE
   }
 
   // Список объектов
-  for (const o of movable) {
+  for (const o of listed) {
     const row = document.createElement('label');
     row.className = 'row';
     row.dataset.id = o.id;
@@ -199,12 +251,18 @@ export function setupEditor(world: World, plot: PlotData, byId: Map<string, THRE
     });
     const name = document.createElement('span');
     name.textContent = o.id;
-    name.addEventListener('click', (e) => {
-      e.preventDefault();
-      select(o.id);
-    });
-    row.append(box, name);
+    const area = document.createElement('span');
+    area.className = 'area';
+    areaTexts.set(o.id, area);
+    for (const part of [name, area]) {
+      part.addEventListener('click', (e) => {
+        e.preventDefault();
+        select(o.id);
+      });
+    }
+    row.append(box, name, area);
     list.append(row);
+    updateArea(o.id);
   }
 
   // Перетаскивание: перехватываем нажатие раньше OrbitControls
