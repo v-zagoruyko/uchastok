@@ -44,5 +44,5 @@
 `npm run typecheck` (`tsc --noEmit`), `npm run build`. Линтера и тестов пока нет.
 
 ## Задачи
-- Локальные: `TASKS.md` (формат: skill `tasks`).
+- Локальные: vault, проект `[[uchastok]]` (skill `tasks`).
 - Внешний трекер: GitHub Issues (`gh issue list`), репозиторий `v-zagoruyko/uchastok`.
